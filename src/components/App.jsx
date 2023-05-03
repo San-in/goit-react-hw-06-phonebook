@@ -1,44 +1,19 @@
-import { useEffect, useState } from 'react';
 import React from 'react';
 
 import { ContactForm } from 'components/ContactForm/ContactForm';
 import { Filter } from 'components/Filter/Filter';
 import { ContactList } from 'components/ContactList/ContactList ';
-import { nanoid } from 'nanoid';
+import { useSelector } from 'react-redux';
+import { getContacts, getFilterValue } from 'redux/selectors';
 
 export const App = () => {
-  const initialValue = () => JSON.parse(localStorage.getItem('contacts')) ?? [];
-
-  const [contacts, setContacts] = useState(initialValue);
-  const [filter, setFilter] = useState('');
-
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
-
-  const createContact = newItem => {
-    const isInContacts = contacts.some(
-      contact => contact.name.toLowerCase() === newItem.name.toLowerCase()
-    );
-    if (isInContacts) {
-      alert(`${newItem.name} is already in contacts.`);
-      return;
-    }
-    const newContact = { ...newItem, id: nanoid() };
-    setContacts(prevContacts => [...prevContacts, newContact]);
-  };
-
-  const onFindInput = ({ target: { value } }) => setFilter(value);
+  // const initialValue = () => JSON.parse(localStorage.getItem('contacts')) ?? [];
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilterValue);
 
   const createFilteredList = () => {
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
-    );
-  };
-
-  const deleteContact = ({ target: { id } }) => {
-    setContacts(prevContacts =>
-      prevContacts.filter(contact => contact.id !== id)
     );
   };
 
@@ -54,15 +29,12 @@ export const App = () => {
       }}
     >
       <h3>Phonebook</h3>
-      <ContactForm createContact={createContact} />
+      <ContactForm />
       <h3>Contacts</h3>
       {contacts.length > 0 ? (
         <>
-          <Filter onFindInput={onFindInput} />
-          <ContactList
-            contactsList={createFilteredList()}
-            deleteContact={deleteContact}
-          />
+          <Filter />
+          <ContactList contactsList={createFilteredList()} />
         </>
       ) : (
         <p>No contacts</p>

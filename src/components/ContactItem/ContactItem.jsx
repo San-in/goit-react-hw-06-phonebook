@@ -4,14 +4,22 @@ import {
   StyledContactItem,
   StyledContactBtn,
 } from 'components/ContactItem/ContactItem.styled';
+import { useDispatch } from 'react-redux';
+import { deleteContact } from 'redux/contactsSlice';
 
-export const ContactItem = ({ item, deleteContact }) => {
+export const ContactItem = ({ item: { name, number, id } }) => {
+  const dispatch = useDispatch();
+
   return (
     <StyledContactItem>
       <p>
-        {item.name}: {item.number}
+        {name}: {number}
       </p>
-      <StyledContactBtn type="button" onClick={deleteContact} id={item.id}>
+      <StyledContactBtn
+        type="button"
+        onClick={({ target: { id } }) => dispatch(deleteContact(id))}
+        id={id}
+      >
         Delete
       </StyledContactBtn>
     </StyledContactItem>
@@ -19,7 +27,6 @@ export const ContactItem = ({ item, deleteContact }) => {
 };
 
 ContactItem.propTypes = {
-  deleteContact: PropTypes.func.isRequired,
   item: PropTypes.exact({
     name: PropTypes.string.isRequired,
     number: PropTypes.string.isRequired,

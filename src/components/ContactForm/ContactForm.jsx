@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 
 import {
   StyledForm,
@@ -7,14 +7,19 @@ import {
   StyledFormBtn,
 } from 'components/ContactForm/ContactForm.styled';
 
-export const ContactForm = ({ createContact }) => {
+import { addContact } from 'redux/contactsSlice';
+
+export const ContactForm = () => {
+  const dispatch = useDispatch();
   const onAddContact = e => {
     e.preventDefault();
     const { name, number } = e.currentTarget;
-    createContact({
-      name: name.value,
-      number: number.value,
-    });
+    dispatch(
+      addContact({
+        name: name.value,
+        number: number.value,
+      })
+    );
     e.currentTarget.reset();
   };
 
@@ -37,8 +42,4 @@ export const ContactForm = ({ createContact }) => {
       <StyledFormBtn type="submit">Add Contact</StyledFormBtn>
     </StyledForm>
   );
-};
-
-ContactForm.propTypes = {
-  createContact: PropTypes.func.isRequired,
 };

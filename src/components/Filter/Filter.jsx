@@ -1,10 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+
 import { FilterLabel, FilterInput } from 'components/Filter/Filter.styled';
-const onBlur = e => {
-  e.currentTarget.value = '';
-};
-export const Filter = ({ onFindInput }) => {
+import { useDispatch } from 'react-redux';
+import { changeFilter } from 'redux/filterSlice';
+
+export const Filter = () => {
+  const dispatch = useDispatch();
+  const onBlur = ({ target: { value } }) => {
+    value = '';
+  };
+  const onChange = ({ target: { value } }) => {
+    dispatch(changeFilter(value));
+  };
   return (
     <>
       <FilterLabel htmlFor="find">Find contacts by name</FilterLabel>
@@ -12,12 +19,9 @@ export const Filter = ({ onFindInput }) => {
         type="text"
         name="find"
         id="find"
-        onChange={onFindInput}
+        onChange={onChange}
         onBlur={onBlur}
       />
     </>
   );
-};
-Filter.propTypes = {
-  onFindInput: PropTypes.func.isRequired,
 };
