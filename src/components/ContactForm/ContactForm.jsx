@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   StyledForm,
@@ -8,18 +8,30 @@ import {
 } from 'components/ContactForm/ContactForm.styled';
 
 import { addContact } from 'redux/contactsSlice';
+import { getContacts } from 'redux/selectors';
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+
   const onAddContact = e => {
     e.preventDefault();
     const { name, number } = e.currentTarget;
-    dispatch(
-      addContact({
-        name: name.value,
-        number: number.value,
-      })
+
+    const isContactExist = contacts.find(
+      contact => contact.name.toLowerCase() === name.value.toLowerCase()
     );
+    if (isContactExist) {
+      alert(`${name.value} is already in contacts.`);
+    } else {
+      dispatch(
+        addContact({
+          name: name.value,
+          number: number.value,
+        })
+      );
+    }
+
     e.currentTarget.reset();
   };
 

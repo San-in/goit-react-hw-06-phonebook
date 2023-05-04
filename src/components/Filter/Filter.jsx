@@ -6,9 +6,7 @@ import { changeFilter } from 'redux/filterSlice';
 
 export const Filter = () => {
   const dispatch = useDispatch();
-  const onBlur = ({ target: { value } }) => {
-    value = '';
-  };
+  const onBlur = ({ target: { value } }) => (value = '');
   const onChange = ({ target: { value } }) => {
     dispatch(changeFilter(value));
   };
